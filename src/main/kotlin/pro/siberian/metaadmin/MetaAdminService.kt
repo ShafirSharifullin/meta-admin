@@ -31,9 +31,10 @@ class MetaAdminService(listableBeanFactory: ListableBeanFactory) {
 
     //    Метод возвращает список значений сущностей из репозитория
     fun getAllDataFrom(repoCode: String, pageable: Pageable): Page<Any> {
-        val list =
-            (findRepoByRepoCode(repoCode)?.repository as PagingAndSortingRepository<*, Any>).findAll(pageable).toList()
-        val totalSize = (findRepoByRepoCode(repoCode)?.repository as PagingAndSortingRepository<*, Any>).count()
+        val list = (findRepoByRepoCode(repoCode)?.repository as PagingAndSortingRepository<Any, Any>)
+            .findAll(pageable)
+            .toList()
+        val totalSize = (findRepoByRepoCode(repoCode)?.repository as PagingAndSortingRepository<Any, Any>).count()
         return PageImpl(list, pageable, totalSize)
     }
 
@@ -41,7 +42,7 @@ class MetaAdminService(listableBeanFactory: ListableBeanFactory) {
         val repo = findRepoByRepoCode(repoCode) ?: return mapOf()
         val fieldNames = getNamesDomainFields(repoCode)
         val repoItem =
-            (repo.repository as PagingAndSortingRepository<*, Any>).findById(id).orElse(null) ?: return mapOf()
+            (repo.repository as PagingAndSortingRepository<Any, Any>).findById(id).orElse(null) ?: return mapOf()
         return fieldNames.associateWith { header ->
             repoItem.javaClass.kotlin.memberProperties.first { it.name == header }.get(repoItem)
         }

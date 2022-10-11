@@ -101,10 +101,10 @@
     </table>
 
     <div class="pagination" th:if="${rows.totalPages > 0}">
-        <a th:href="@{/admin/{repoCode}(repoCode = ${repoCode}, size=5, page=${(page > 1) ? (page - 1) : 1})}">
+        <a th:href="@{/admin/{repoCode}(repoCode = ${repoCode}, size=15, page=${(page > 1 && page <= rows.totalPages) ? (page - 1) : 1})}">
             <button>Предыдущая страница</button>
         </a>
-        <a th:href="@{/admin/{repoCode}(repoCode = ${repoCode}, size=5, page=${(page < rows.totalPages) ? (page + 1) : rows.totalPages})}">
+        <a th:href="@{/admin/{repoCode}(repoCode = ${repoCode}, size=15, page=${(page < rows.totalPages) ? (page + 1) : 1})}">
             <button>Следующая страница</button>
         </a>
     </div>

@@ -29,7 +29,12 @@ class AdminController(private val metaAdminService: MetaAdminService) {
         model: Model,
     ): String {
         val currentPage = page.orElse(1)
-        val pageSize = size.orElse(5)
+        val pageSize = size.orElse(15)
+
+        if (currentPage < 0 || pageSize < 0) {
+            error(HttpStatus.BAD_REQUEST, model = model)
+            return "error"
+        }
 
         val rows = metaAdminService.getAllDataFrom(repoCode, PageRequest.of(currentPage - 1, pageSize))
 
