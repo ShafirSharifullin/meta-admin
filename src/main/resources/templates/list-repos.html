@@ -77,6 +77,10 @@
         .list1 li:hover:after {
             width: 100%;
         }
+
+        .list1 a {
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -84,33 +88,10 @@
     <h1 class="header-h1">Список доступных репозиториев</h1>
 
     <ol class="list1">
-        <li th:each="repo : ${repos}">
-            <a th:href="@{/admin/{repoCode}(repoCode = ${repo})}">
-                <span th:text="${repo}"></span>
-            </a>
-        </li>
+        <a th:each="repo : ${repos}" th:href="@{/admin/{repoCode}(repoCode = ${repo})}">
+            <li><span th:text="${repo}"></span></li>
+        </a>
     </ol>
-
-    <!--            <form th:action="@{/admin/}">-->
-    <!--                <input type="text" th:name="participant"/>-->
-    <!--                <input type="submit"/>-->
-    <!--            </form>-->
-
-    <!--            <form th:action="@{/}">-->
-    <!--                <input type="text" th:name="participant"/>-->
-    <!--                <select th:name="country">-->
-    <!--                    <option value="de">Germany</option>-->
-    <!--                    <option value="nl">Netherlands</option>-->
-    <!--                    <option value="pl">Poland</option>-->
-    <!--                    <option value="lv">Latvia</option>-->
-    <!--                </select>-->
-    <!--            </form>-->
-
-    <!--            <tbody>-->
-    <!--            <tr th:each="repo: ${repos}">-->
-    <!--                <td th:text="${repo}"/>-->
-    <!--            </tr>-->
-    <!--            </tbody>-->
 </main>
 </body>
 </html>
