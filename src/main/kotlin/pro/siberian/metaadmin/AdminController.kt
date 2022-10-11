@@ -1,16 +1,19 @@
 package pro.siberian.metaadmin
 
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestParam
 import java.time.Instant
+import java.util.*
+
 
 @Controller
 class AdminController(private val metaAdminService: MetaAdminService) {
-
 
     @GetMapping("/admin")
     fun showListRepo(model: Model): String {
@@ -19,13 +22,18 @@ class AdminController(private val metaAdminService: MetaAdminService) {
     }
 
     @GetMapping("/admin/{repoCode}")
-    fun showDataFromRepo(@PathVariable repoCode: String, model: Model): String {
-        val rows = metaAdminService.getAllDataFrom(repoCode)
-        if (rows == null) {
-            error(HttpStatus.NOT_FOUND, model = model)
-            return "error"
-        }
+    fun showDataFromRepo(
+        @PathVariable repoCode: String,
+        @RequestParam("page") page: Optional<Int>,
+        @RequestParam("size") size: Optional<Int>,
+        model: Model,
+    ): String {
+        val currentPage = page.orElse(1)
+        val pageSize = size.orElse(5)
 
+        val rows = metaAdminService.getAllDataFrom(repoCode, PageRequest.of(currentPage - 1, pageSize))
+
+        model.addAttribute("page", currentPage)
         model.addAttribute("headers", metaAdminService.getNamesDomainFields(repoCode))
         model.addAttribute("rows", rows)
         model.addAttribute("repoCode", repoCode)

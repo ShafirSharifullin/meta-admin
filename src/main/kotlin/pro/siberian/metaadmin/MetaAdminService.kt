@@ -1,8 +1,12 @@
 package pro.siberian.metaadmin
 
 import org.springframework.beans.factory.ListableBeanFactory
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jdbc.core.mapping.BasicJdbcPersistentProperty
 import org.springframework.data.repository.CrudRepository
+import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.data.repository.support.Repositories
 import org.springframework.stereotype.Service
 import kotlin.reflect.full.memberProperties
@@ -12,47 +16,43 @@ class MetaAdminService(listableBeanFactory: ListableBeanFactory) {
 
     private final var reposInfo: Repositories = Repositories(listableBeanFactory)
     private final val domains = reposInfo.toSet()
-    val repos: List<Repo> =
+    private val repos: List<Repo> =
         domains.map { domain ->
             Repo(
                 reposInfo.getRepositoryInformationFor(domain).get().repositoryInterface.simpleName,
-                reposInfo.getRepositoryFor(domain).get() as CrudRepository<*, *>,
+                reposInfo.getRepositoryFor(domain).get() as PagingAndSortingRepository<Any, Any>,
                 domain,
                 reposInfo.getPersistentEntity(domain).map { DomainField(it as BasicJdbcPersistentProperty, it.name) }
             )
         }
 
+    //    Метод возвращает коды репозиториев, которыми являются их имена
     fun getRepoCodes() = repos.map { it.repoCode }
 
-    fun getAllDataFrom(repoCode: String): List<Map<String?, Any?>>? {
-        val repo = findRepoByRepoCode(repoCode) ?: return null
-        val fieldNames = getNamesDomainFields(repoCode)
-        return repo.repository.findAll().map { el ->
-            fieldNames.associateWith { header ->
-                el.javaClass.kotlin.memberProperties.first { it.name == header }.get(el)
-            }
-        }
+    //    Метод возвращает список значений сущностей из репозитория
+    fun getAllDataFrom(repoCode: String, pageable: Pageable): Page<Any> {
+        val list =
+            (findRepoByRepoCode(repoCode)?.repository as PagingAndSortingRepository<*, Any>).findAll(pageable).toList()
+        val totalSize = (findRepoByRepoCode(repoCode)?.repository as PagingAndSortingRepository<*, Any>).count()
+        return PageImpl(list, pageable, totalSize)
     }
 
     fun getRepoItemById(repoCode: String, id: Long): Map<String?, Any?> {
         val repo = findRepoByRepoCode(repoCode) ?: return mapOf()
         val fieldNames = getNamesDomainFields(repoCode)
-        val repoItem = (repo.repository as CrudRepository<*, Any>).findById(id).orElse(null) ?: return mapOf()
+        val repoItem =
+            (repo.repository as PagingAndSortingRepository<*, Any>).findById(id).orElse(null) ?: return mapOf()
         return fieldNames.associateWith { header ->
             repoItem.javaClass.kotlin.memberProperties.first { it.name == header }.get(repoItem)
         }
     }
 
-    fun getDomain(repoCode: String): Class<*>? = findRepoByRepoCode(repoCode)?.domain
+    fun save(repoCode: String, domain: Any): Any =
+        (findRepoByRepoCode(repoCode)?.repository as PagingAndSortingRepository<Any, Any>).save(domain)
 
-    fun getDomainFields(repoCode: String): List<DomainField> = findRepoByRepoCode(repoCode)?.domainFields ?: listOf()
-
-    fun save(repoCode: String, domain: Class<*>): Class<*>? =
-        (findRepoByRepoCode(repoCode)?.repository as CrudRepository<Class<*>, Any>).save(domain)
-
+    //    Метод возвращает имена полей, которые должны будут отображены
     fun getNamesDomainFields(repoCode: String): List<String?> =
         findRepoByRepoCode(repoCode)?.domainFields
-//            Фильтр убирает поля из сущности, которые являются связью один-ко-многим
             ?.filter { it.field.field?.type?.kotlin != List::class }
             ?.map { it.nameField } ?: listOf()
 

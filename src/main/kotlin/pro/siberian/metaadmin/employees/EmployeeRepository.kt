@@ -1,7 +1,7 @@
 package pro.siberian.metaadmin.employees
 
-import org.springframework.data.repository.CrudRepository
+import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface EmployeeRepository : CrudRepository<Employee, Long>
+interface EmployeeRepository : PagingAndSortingRepository<Employee, Long>

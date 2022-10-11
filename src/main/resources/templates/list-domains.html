@@ -59,6 +59,17 @@
         button:active {
             background: #888888;
         }
+
+        .pagination {
+            display: flex;
+            margin: 5px;
+            justify-content: flex-end;
+        }
+
+        .pagination a button {
+            flex: 1 1 auto;
+            margin: 0 5px;
+        }
     </style>
 </head>
 <body>
@@ -75,10 +86,9 @@
 
         <tbody>
         <tr id="tablerow" th:each="row: ${rows}">
-            <td th:each="header: ${headers}" th:text="${row.get(header)}"/>
-            <td style="text-align:center;">
-                <!--     Временное решение использовать поле id в запросе, т.к. не во всех сущностях есть такое поле           -->
-                <form th:action="@{'/admin/{repoCode}/{id}'(repoCode = ${repoCode}, id = ${row.get('id')})}"
+            <td th:each="header: ${headers}" th:text="${row.__${header}__}"></td>
+            <td style="text-align:center;" th:if="${rows.totalPages > 0}">
+                <form th:action="@{'/admin/{repoCode}/{id}'(repoCode = ${repoCode}, id = ${row.__${headers[0]}__})}"
                       th:method="get">
                     <div>
                         <button type="submit">Редактировать</button>
@@ -87,7 +97,17 @@
             </td>
         </tr>
         </tbody>
+
     </table>
+
+    <div class="pagination" th:if="${rows.totalPages > 0}">
+        <a th:href="@{/admin/{repoCode}(repoCode = ${repoCode}, size=5, page=${(page > 1) ? (page - 1) : 1})}">
+            <button>Предыдущая страница</button>
+        </a>
+        <a th:href="@{/admin/{repoCode}(repoCode = ${repoCode}, size=5, page=${(page < rows.totalPages) ? (page + 1) : rows.totalPages})}">
+            <button>Следующая страница</button>
+        </a>
+    </div>
 </main>
 </body>
 </html>
