@@ -2,74 +2,22 @@
 <html lang="ru" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Админка</title>
-    <meta charset="UTF-8">
-    <style>
-        body {
-            font-family: "Inter", sans-serif;
-        }
-
-        .header-h1 {
-            padding-bottom: .125rem;
-            border-top: .125rem solid #000;
-            border-bottom: .125rem solid #000;
-            font-size: 1.5rem;
-            text-align: center;
-        }
-
-        button {
-            color: #000000;
-            border-radius: 5px;
-            text-decoration: none;
-            user-select: none;
-            background: #dddddd;
-            padding: .7em 1.5em;
-        }
-
-        button:hover {
-            background: #dddddd;
-        }
-
-        button:active {
-            background: #888888;
-        }
-
-        div {
-            margin: 20px;
-            font-size: 12px;
-        }
-
-        input {
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 10px;
-        }
-
-        .name-field {
-            font-size: 18px;
-            font-weight: bold;
-
-            position: relative;
-            display: inline-block;
-            top: -30px;
-            left: 2px;
-            width: 0px;
-        }
-    </style>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
 <main>
     <h1 class="header-h1">Форма редактирования</h1>
 
-    <form th:action="@{'/admin/{repoCode}/{id}' (repoCode = ${repoCode}, id = ${repoItem.get('id')})}" th:method="post">
+    <form class="edit-form" th:action="@{'/admin/{repoCode}/{id}' (repoCode = ${repoCode}, id = ${repoItem.get('id')})}"
+          th:method="post">
         <th:block th:each="header: ${headers}">
             <div>
-                <label class="name-field"><span th:text="${header}"></span></label>
-                <input th:name="strings" th:value="${repoItem.get(header)}" type="text"> <!--th:field="*{header}"-->
+                <label class="name-field" th:for="${header}"><span th:text="${header}"></span></label>
+                <input th:id="${header}" th:name="strings" th:value="${repoItem.get(header)}" type="text">
             </div>
         </th:block>
-        <div>
-            <button type="submit">Сохранить</button>
-        </div>
+        <button class="button-1" type="submit">Сохранить</button>
     </form>
 </main>
 </body>

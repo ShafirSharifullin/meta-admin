@@ -2,92 +2,14 @@
 <html lang="ru" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Админка</title>
-    <meta charset="UTF-8">
-    <style>
-        body {
-            font-family: "Inter", sans-serif;
-        }
-
-        .header-h1 {
-            padding-bottom: .125rem;
-            border-top: .125rem solid #000;
-            border-bottom: .125rem solid #000;
-            font-size: 1.5rem;
-            text-align: center;
-        }
-
-        .list1 {
-            margin: 20px 0 0;
-            padding: 0;
-            list-style: none;
-            counter-reset: li;
-        }
-
-        .list1 li {
-            border: 2px solid #6a7080;
-            background: #EBF3FA;
-            position: relative;
-            margin-bottom: 20px;
-            padding: 16px 10px;
-        }
-
-        .list1 li:hover {
-            z-index: 1;
-        }
-
-        .list1 li:before {
-            border: 2px solid #6a7080;
-            position: absolute;
-            top: -14px;
-            padding: 2px 10px;
-            font-size: 11px;
-            font-weight: bold;
-            color: #6a7080;
-            background: #F7FAFD;
-            counter-increment: li;
-            content: counter(li);
-            -webkit-transition-duration: 0.3s;
-            transition-duration: 0.3s;
-        }
-
-        .list1 li:hover:before {
-            background: #6a7080;
-            color: #FFF;
-            -webkit-transform: translate(-12px, 0);
-            -ms-transform: translate(-12px, 0);
-            -o-transform: translate(-12px, 0);
-            transform: translate(-12px, 0);
-        }
-
-        .list1 li:after {
-            content: "";
-            position: absolute;
-            -webkit-transition-duration: 0.4s;
-            transition-duration: 0.4s;
-            -webkit-transition-property: width;
-            transition-property: width;
-            z-index: -1;
-            background: #FFF;
-            height: 100%;
-            left: 0;
-            top: 0;
-            width: 0;
-        }
-
-        .list1 li:hover:after {
-            width: 100%;
-        }
-
-        .list1 a {
-            text-decoration: none;
-        }
-    </style>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
 <main>
     <h1 class="header-h1">Список доступных репозиториев</h1>
 
-    <ol class="list1">
+    <ol class="list-repos">
         <a th:each="repo : ${repos}" th:href="@{/admin/{repoCode}(repoCode = ${repo})}">
             <li><span th:text="${repo}"></span></li>
         </a>

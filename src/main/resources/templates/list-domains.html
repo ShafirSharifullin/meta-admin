@@ -2,81 +2,14 @@
 <html lang="ru" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Админка</title>
-    <meta charset="UTF-8">
-    <link href="../static/css/style.css" rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
-    <style>
-        body {
-            font-family: "Inter", sans-serif;
-        }
-
-        table {
-            width: 100%;
-            margin-bottom: 20px;
-            border-collapse: collapse;
-        }
-
-        table th {
-            font-weight: bold;
-            padding: 5px;
-            background: #efefef;
-            border: 1px solid #dddddd;
-        }
-
-        table td {
-            border: 1px solid #dddddd;
-            padding: 5px;
-        }
-
-        table tr td:first-child, table tr th:first-child {
-            border-left: none;
-        }
-
-        table tr td:last-child, table tr th:last-child {
-            border-right: none;
-        }
-
-        .header-h1 {
-            padding-bottom: .125rem;
-            border-top: .125rem solid #000;
-            border-bottom: .125rem solid #000;
-            font-size: 1.5rem;
-            text-align: center;
-        }
-
-        button {
-            color: #000000;
-            border-radius: 5px;
-            text-decoration: none;
-            user-select: none;
-            background: #dddddd;
-            padding: .4em 1em;
-        }
-
-        button:hover {
-            background: #dddddd;
-        }
-
-        button:active {
-            background: #888888;
-        }
-
-        .pagination {
-            display: flex;
-            margin: 5px;
-            justify-content: flex-end;
-        }
-
-        .pagination a button {
-            flex: 1 1 auto;
-            margin: 0 5px;
-        }
-    </style>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
 <main>
     <h1 class="header-h1">Данные из репозитория <span th:text="${repoCode}"></span></h1>
 
-    <table>
+    <table class="table-1">
         <thead>
         <tr>
             <th th:each="header: ${headers}" th:text="${header}"/>
@@ -91,7 +24,7 @@
                 <form th:action="@{'/admin/{repoCode}/{id}'(repoCode = ${repoCode}, id = ${row.__${headers[0]}__})}"
                       th:method="get">
                     <div>
-                        <button type="submit">Редактировать</button>
+                        <button class="button-1" type="submit">Редактировать</button>
                     </div>
                 </form>
             </td>
@@ -102,10 +35,10 @@
 
     <div class="pagination" th:if="${rows.totalPages > 0}">
         <a th:href="@{/admin/{repoCode}(repoCode = ${repoCode}, size=15, page=${(page > 1 && page <= rows.totalPages) ? (page - 1) : 1})}">
-            <button>Предыдущая страница</button>
+            <button class="button-1">Предыдущая страница</button>
         </a>
         <a th:href="@{/admin/{repoCode}(repoCode = ${repoCode}, size=15, page=${(page < rows.totalPages) ? (page + 1) : 1})}">
-            <button>Следующая страница</button>
+            <button class="button-1">Следующая страница</button>
         </a>
     </div>
 </main>

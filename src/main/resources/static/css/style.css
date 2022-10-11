@@ -1,22 +1,166 @@
-/* Этот ресурс css не подтягивается, поэтому CSS-правила были перенесены в файл html*/
-/*table {*/
-/*    width: 100%;*/
-/*    margin-bottom: 20px;*/
-/*    border-collapse: collapse;*/
-/*}*/
-/*table th {*/
-/*    font-weight: bold;*/
-/*    padding: 5px;*/
-/*    background: #efefef;*/
-/*    border: 1px solid #dddddd;*/
-/*}*/
-/*table td {*/
-/*    border: 1px solid #dddddd;*/
-/*    padding: 5px;*/
-/*}*/
-/*table tr td:first-child, table tr th:first-child {*/
-/*    border-left: none;*/
-/*}*/
-/*table tr td:last-child, table tr th:last-child {*/
-/*    border-right: none;*/
-/*}*/
+body {
+    font-family: "Inter", sans-serif;
+}
+
+.header-h1 {
+    padding-bottom: .125rem;
+    border-top: .125rem solid #000;
+    border-bottom: .125rem solid #000;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.list-repos {
+    margin: 20px 0 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: li;
+}
+
+.list-repos li {
+    border: 2px solid #6a7080;
+    background: #EBF3FA;
+    position: relative;
+    margin-bottom: 20px;
+    padding: 16px 10px;
+}
+
+.list-repos li:hover {
+    z-index: 1;
+}
+
+.list-repos li:before {
+    border: 2px solid #6a7080;
+    position: absolute;
+    top: -14px;
+    padding: 2px 10px;
+    font-size: 11px;
+    font-weight: bold;
+    color: #6a7080;
+    background: #F7FAFD;
+    counter-increment: li;
+    content: counter(li);
+    -webkit-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+}
+
+.list-repos li:hover:before {
+    background: #6a7080;
+    color: #FFF;
+    -webkit-transform: translate(-12px, 0);
+    -ms-transform: translate(-12px, 0);
+    -o-transform: translate(-12px, 0);
+    transform: translate(-12px, 0);
+}
+
+.list-repos li:after {
+    content: "";
+    position: absolute;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    -webkit-transition-property: width;
+    transition-property: width;
+    z-index: -1;
+    background: #FFF;
+    height: 100%;
+    left: 0;
+    top: 0;
+    width: 0;
+}
+
+.list-repos li:hover:after {
+    width: 100%;
+}
+
+.list-repos a {
+    text-decoration: none;
+}
+
+.table-1 {
+    width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+}
+
+.table-1 th {
+    font-weight: bold;
+    padding: 5px;
+    background: #efefef;
+    border: 1px solid #dddddd;
+}
+
+.table-1 td {
+    border: 1px solid #dddddd;
+    padding: 5px;
+}
+
+.table-1 tr td:first-child, table tr th:first-child {
+    border-left: none;
+}
+
+.table-1 tr td:last-child, table tr th:last-child {
+    border-right: none;
+}
+
+.header-h1 {
+    padding-bottom: .125rem;
+    border-top: .125rem solid #000;
+    border-bottom: .125rem solid #000;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.button-1 {
+    color: #000000;
+    border-radius: 5px;
+    text-decoration: none;
+    user-select: none;
+    background: #dddddd;
+    padding: .4em 1em;
+}
+
+.button-1:hover {
+    background: #dddddd;
+}
+
+.button-1:active {
+    background: #888888;
+}
+
+.pagination {
+    display: flex;
+    margin: 5px;
+    justify-content: flex-end;
+}
+
+.pagination a button {
+    flex: 1 1 auto;
+    margin: 0 5px;
+}
+
+.edit-form .button-1 {
+    margin: 20px;
+    font-size: 12px;
+}
+
+.edit-form input {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 10px;
+}
+
+.edit-form div {
+    margin: 20px;
+    font-size: 12px;
+}
+
+.name-field {
+    font-size: 18px;
+    font-weight: bold;
+
+    position: relative;
+    display: inline-block;
+    top: -30px;
+    left: 2px;
+    width: 0px;
+}
