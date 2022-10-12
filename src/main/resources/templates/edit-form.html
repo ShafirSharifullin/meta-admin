@@ -9,12 +9,12 @@
 <main>
     <h1 class="header-h1">Форма редактирования</h1>
 
-    <form class="edit-form" th:action="@{'/admin/{repoCode}/{id}' (repoCode = ${repoCode}, id = ${repoItem.get('id')})}"
+    <form class="edit-form" th:action="@{'/admin/{repoCode}/{id}' (repoCode = ${repoCode}, id = ${repoItem.hashCode})}"
           th:method="post">
-        <th:block th:each="header: ${headers}">
+        <th:block th:each="fieldName: ${fieldNames}">
             <div>
-                <label class="name-field" th:for="${header}"><span th:text="${header}"></span></label>
-                <input th:id="${header}" th:name="strings" th:value="${repoItem.get(header)}" type="text">
+                <label class="name-field" th:for="${fieldName}"><span th:text="${fieldName}"></span></label>
+                <input th:id="${fieldName}" th:name="strings" th:value="${repoItem.__${fieldName}__}" type="text">
             </div>
         </th:block>
         <button class="button-1" type="submit">Сохранить</button>

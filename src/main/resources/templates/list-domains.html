@@ -12,32 +12,29 @@
     <table class="table-1">
         <thead>
         <tr>
-            <th th:each="header: ${headers}" th:text="${header}"/>
+            <th th:each="fieldName: ${fieldNames}" th:text="${fieldName}"/>
             <th>Действие</th>
         </tr>
         </thead>
 
         <tbody>
-        <tr id="tablerow" th:each="row: ${rows}">
-            <td th:each="header: ${headers}" th:text="${row.__${header}__}"></td>
-            <td style="text-align:center;" th:if="${rows.totalPages > 0}">
-                <form th:action="@{'/admin/{repoCode}/{id}'(repoCode = ${repoCode}, id = ${row.__${headers[0]}__})}"
-                      th:method="get">
-                    <div>
-                        <button class="button-1" type="submit">Редактировать</button>
-                    </div>
-                </form>
+        <tr th:each="repoItem: ${repoItems}">
+            <td th:each="fieldName: ${fieldNames}" th:text="${repoItem.__${fieldName}__}"></td>
+            <td style="text-align:center;" th:if="${totalPages > 0}">
+                <a th:href="@{/admin/{repoCode}/{id}(id=${repoItem.hashCode}, repoCode = ${repoCode}, size=15, page=1)}">
+                    <button class="button-1">Редактировать</button>
+                </a>
             </td>
         </tr>
         </tbody>
 
     </table>
 
-    <div class="pagination" th:if="${rows.totalPages > 0}">
-        <a th:href="@{/admin/{repoCode}(repoCode = ${repoCode}, size=15, page=${(page > 1 && page <= rows.totalPages) ? (page - 1) : 1})}">
+    <div class="pagination" th:if="${totalPages > 0}">
+        <a th:href="@{/admin/{repoCode}(repoCode = ${repoCode}, size=15, page=${(page > 1 && page <= totalPages) ? (page - 1) : 1})}">
             <button class="button-1">Предыдущая страница</button>
         </a>
-        <a th:href="@{/admin/{repoCode}(repoCode = ${repoCode}, size=15, page=${(page < rows.totalPages) ? (page + 1) : 1})}">
+        <a th:href="@{/admin/{repoCode}(repoCode = ${repoCode}, size=15, page=${(page < totalPages) ? (page + 1) : 1})}">
             <button class="button-1">Следующая страница</button>
         </a>
     </div>

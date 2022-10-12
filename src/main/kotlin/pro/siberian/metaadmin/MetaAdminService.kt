@@ -9,7 +9,6 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.data.repository.support.Repositories
 import org.springframework.stereotype.Service
-import kotlin.reflect.full.memberProperties
 
 @Service
 class MetaAdminService(listableBeanFactory: ListableBeanFactory) {
@@ -41,15 +40,15 @@ class MetaAdminService(listableBeanFactory: ListableBeanFactory) {
         return PageImpl(items, pageable, totalSize)
     }
 
-    fun getRepoItemById(repoCode: String, id: Long): Map<String?, Any?> {
-        val repo = findRepoByRepoCode(repoCode) ?: return mapOf()
-        val fieldNames = getNamesDomainFields(repoCode)
-        val repoItem = (repo.repository as PagingAndSortingRepository<Any, Any>)
-            .findById(id).orElse(null) ?: return mapOf()
-        return fieldNames.associateWith { header ->
-            repoItem.javaClass.kotlin.memberProperties.first { it.name == header }.get(repoItem)
-        }
-    }
+//    fun getRepoItemById(repoCode: String, id: Long): Map<String?, Any?> {
+//        val repo = findRepoByRepoCode(repoCode) ?: return mapOf()
+//        val fieldNames = getNamesDomainFields(repoCode)
+//        val repoItem = (repo.repository as PagingAndSortingRepository<Any, Any>)
+//            .findById(id).orElse(null) ?: return mapOf()
+//        return fieldNames.associateWith { header ->
+//            repoItem.javaClass.kotlin.memberProperties.first { it.name == header }.get(repoItem)
+//        }
+//    }
 
     fun save(repoCode: String, domain: Any): Any =
         (findRepoByRepoCode(repoCode)?.repository as PagingAndSortingRepository<Any, Any>).save(domain)

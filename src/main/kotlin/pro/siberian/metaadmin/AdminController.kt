@@ -36,31 +36,48 @@ class AdminController(private val metaAdminService: MetaAdminService) {
             return "error"
         }
 
-        val rows = metaAdminService.getAllDataFrom(repoCode, PageRequest.of(currentPage - 1, pageSize))
+        val repoItems = metaAdminService.getAllDataFromRepo(repoCode, PageRequest.of(currentPage - 1, pageSize))
 
         model.addAttribute("page", currentPage)
-        model.addAttribute("headers", metaAdminService.getNamesDomainFields(repoCode))
-        model.addAttribute("rows", rows)
+        model.addAttribute("size", pageSize)
+        model.addAttribute("totalPages", repoItems.totalPages)
+        model.addAttribute("fieldNames", metaAdminService.getNamesDomainFields(repoCode))
+        model.addAttribute("repoItems", repoItems)
         model.addAttribute("repoCode", repoCode)
 
         return "list-domains"
     }
 
     @GetMapping("/admin/{repoCode}/{id}")
-    fun showEditingForm(@PathVariable id: Long, @PathVariable repoCode: String, model: Model): String {
-        val repoItem = metaAdminService.getRepoItemById(repoCode, id).ifEmpty {
+    fun showEditForm(
+        @PathVariable id: Int,
+        @PathVariable repoCode: String,
+        @RequestParam("page") page: Int,
+        @RequestParam("size") size: Int,
+        model: Model,
+    ): String {
+        if (page < 0 || size < 0) {
+            error(HttpStatus.BAD_REQUEST, model = model)
+            return "error"
+        }
+
+        val repoItem = metaAdminService.getAllDataFromRepo(repoCode, PageRequest.of(page - 1, size))
+            .content
+            .find { it.hashCode() == id }
+
+        if (repoItem == null) {
             error(HttpStatus.NOT_FOUND, model = model)
             return "error"
         }
 
-        model.addAttribute("headers", metaAdminService.getNamesDomainFields(repoCode))
+        model.addAttribute("fieldNames", metaAdminService.getNamesDomainFields(repoCode))
         model.addAttribute("repoItem", repoItem)
 
         return "edit-form"
     }
 
     @PostMapping("/admin/{repoCode}/{id}")
-    fun updateRepo(@PathVariable id: Long, @PathVariable repoCode: String, vararg strings: String): String {
+    fun updateRepo(@PathVariable id: Int, @PathVariable repoCode: String, vararg strings: String): String {
         return "redirect:/admin/$repoCode"
     }
 
