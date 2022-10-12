@@ -20,8 +20,11 @@ class MetaAdminService(listableBeanFactory: ListableBeanFactory) {
         domains.map { domain ->
             Repo(
                 reposInfo.getRepositoryInformationFor(domain).get().repositoryInterface.simpleName,
+//                Получение репозитория
                 reposInfo.getRepositoryFor(domain).get() as PagingAndSortingRepository<Any, Any>,
+//                Сущность, которая связана с репозиторием
                 domain,
+//                Список полей сущности и их имен
                 reposInfo.getPersistentEntity(domain).map { DomainField(it as BasicJdbcPersistentProperty, it.name) }
             )
         }
@@ -30,19 +33,19 @@ class MetaAdminService(listableBeanFactory: ListableBeanFactory) {
     fun getRepoCodes() = repos.map { it.repoCode }
 
     //    Метод возвращает список значений сущностей из репозитория
-    fun getAllDataFrom(repoCode: String, pageable: Pageable): Page<Any> {
-        val list = (findRepoByRepoCode(repoCode)?.repository as PagingAndSortingRepository<Any, Any>)
+    fun getAllDataFromRepo(repoCode: String, pageable: Pageable): Page<Any> {
+        val items = (findRepoByRepoCode(repoCode)?.repository as PagingAndSortingRepository<Any, Any>)
             .findAll(pageable)
             .toList()
         val totalSize = (findRepoByRepoCode(repoCode)?.repository as PagingAndSortingRepository<Any, Any>).count()
-        return PageImpl(list, pageable, totalSize)
+        return PageImpl(items, pageable, totalSize)
     }
 
     fun getRepoItemById(repoCode: String, id: Long): Map<String?, Any?> {
         val repo = findRepoByRepoCode(repoCode) ?: return mapOf()
         val fieldNames = getNamesDomainFields(repoCode)
-        val repoItem =
-            (repo.repository as PagingAndSortingRepository<Any, Any>).findById(id).orElse(null) ?: return mapOf()
+        val repoItem = (repo.repository as PagingAndSortingRepository<Any, Any>)
+            .findById(id).orElse(null) ?: return mapOf()
         return fieldNames.associateWith { header ->
             repoItem.javaClass.kotlin.memberProperties.first { it.name == header }.get(repoItem)
         }
@@ -52,9 +55,13 @@ class MetaAdminService(listableBeanFactory: ListableBeanFactory) {
         (findRepoByRepoCode(repoCode)?.repository as PagingAndSortingRepository<Any, Any>).save(domain)
 
     //    Метод возвращает имена полей, которые должны будут отображены
-    fun getNamesDomainFields(repoCode: String): List<String?> =
+    fun getNamesDomainFields(repoCode: String): List<String> =
         findRepoByRepoCode(repoCode)?.domainFields
-            ?.filter { it.field.field?.type?.kotlin != List::class }
+            ?.filter {
+                it.field.field?.annotations?.find { annotation ->
+                    annotation.annotationClass.simpleName == "MappedCollection"
+                } == null
+            }
             ?.map { it.nameField } ?: listOf()
 
     private fun findRepoByRepoCode(repoCode: String): Repo? = repos.find { it.repoCode == repoCode }
