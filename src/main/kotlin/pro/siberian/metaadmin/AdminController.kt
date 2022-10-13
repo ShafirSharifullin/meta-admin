@@ -29,7 +29,7 @@ class AdminController(private val metaAdminService: MetaAdminService) {
         val pageSize = size.orElse(15)
 
         if (currentPage < 0 || pageSize < 0) {
-            error(HttpStatus.BAD_REQUEST, model = model)
+            error(HttpStatus.BAD_REQUEST, "Параметры page и size должны быть положительными", model = model)
             return "error"
         }
 
@@ -58,7 +58,7 @@ class AdminController(private val metaAdminService: MetaAdminService) {
         model: Model,
     ): String {
         if (page < 0 || size < 0) {
-            error(HttpStatus.BAD_REQUEST, model = model)
+            error(HttpStatus.BAD_REQUEST, "Параметры page и size должны быть положительными", model = model)
             return "error"
         }
 
@@ -89,7 +89,7 @@ class AdminController(private val metaAdminService: MetaAdminService) {
         model: Model,
     ): String {
         if (page < 0 || size < 0) {
-            error(HttpStatus.BAD_REQUEST, model = model)
+            error(HttpStatus.BAD_REQUEST, "Параметры page и size должны быть положительными", model = model)
             return "error"
         }
 

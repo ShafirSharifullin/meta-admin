@@ -178,3 +178,8 @@ body {
 .action input {
     display: none;
 }
+
+.action button {
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
