@@ -9,10 +9,18 @@
 <main>
     <h1 class="header-h1">Данные из репозитория <span th:text="${repoCode}"></span></h1>
 
+    <form class="form-page-size" th:action="@{'/admin/{repoCode}'(repoCode = ${repoCode})}" th:method="get">
+        <label>Количество элементов на странице:
+            <input th:name="size" th:value="${size}">
+        </label>
+        <input th:name="page" th:value="${page}">
+        <button class="button-1" type="submit">Обновить</button>
+    </form>
+
     <table class="table-1">
         <thead>
         <tr>
-            <th th:each="fieldName: ${fieldNames}" th:text="${fieldName}"/>
+            <th th:each="fieldName: ${fieldNames}" th:text="${fieldName}"></th>
             <th>Действие</th>
         </tr>
         </thead>
@@ -21,16 +29,8 @@
         <tr th:each="repoItem: ${repoItems}">
             <td th:each="fieldName: ${fieldNames}" th:text="${repoItem.__${fieldName}__}"></td>
             <td style="text-align:center;" th:if="${totalPages > 0}">
-                <!--в ветке мастер изменить на size=${size} page=${page}               -->
-                <!--                <a th:href="@{/admin/{repoCode}/{id}(id=${repoItem.hashCode}, repoCode = ${repoCode}, size=${size}, page=${page})}">-->
-                <!--                    <button class="button-1">Редактировать</button>-->
-                <!--                </a>-->
-                <!--                <a th:method="delete" th:href="@{/admin/{repoCode}/{id}(id=${repoItem.hashCode}, repoCode = ${repoCode}, size=${size}, page=${page})}">-->
-                <!--                    <button class="button-1">Удалить</button>-->
-                <!--                </a>-->
-
                 <form class="action"
-                      th:action="@{'/admin/{repoCode}/{id}'(id=${repoItem.hashCode}, repoCode = ${repoCode})}"
+                      th:action="@{'/admin/{repoCode}/{id}'(id=${repoItem.hashCode}, repoCode = ${repoCode}, page=)}"
                       th:method="get">
                     <input th:name="page" th:value="${page}">
                     <input th:name="size" th:value="${size}">
@@ -50,10 +50,11 @@
     </table>
 
     <div class="pagination" th:if="${totalPages > 0}">
-        <a th:href="@{/admin/{repoCode}(repoCode = ${repoCode}, size=15, page=${(page > 1 && page <= totalPages) ? (page - 1) : 1})}">
+        <p>Страница <span th:text="${page}"></span></p>
+        <a th:href="@{/admin/{repoCode}(repoCode = ${repoCode}, size=${size}, page=${(page > 1 && page <= totalPages) ? (page - 1) : 1})}">
             <button class="button-1">Предыдущая страница</button>
         </a>
-        <a th:href="@{/admin/{repoCode}(repoCode = ${repoCode}, size=15, page=${(page < totalPages) ? (page + 1) : 1})}">
+        <a th:href="@{/admin/{repoCode}(repoCode = ${repoCode}, size=${size}, page=${(page < totalPages) ? (page + 1) : 1})}">
             <button class="button-1">Следующая страница</button>
         </a>
     </div>

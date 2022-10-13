@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import java.time.Instant
-import java.util.*
 
 
 @Controller
@@ -21,14 +20,17 @@ class AdminController(private val metaAdminService: MetaAdminService) {
     @GetMapping("/admin/{repoCode}")
     fun showDataFromRepo(
         @PathVariable repoCode: String,
-        @RequestParam("page") page: Optional<Int>,
-        @RequestParam("size") size: Optional<Int>,
+        @RequestParam("page") page: Int?,
+        @RequestParam("size") size: Int?,
         model: Model,
     ): String {
-        val currentPage = page.orElse(1)
-        val pageSize = size.orElse(15)
+        val currentPage = page ?: (1)
+        var pageSize = size ?: (15)
+        if (pageSize < 0) {
+            pageSize *= -1
+        }
 
-        if (currentPage < 0 || pageSize < 0) {
+        if (currentPage < 0) {
             error(HttpStatus.BAD_REQUEST, "Параметры page и size должны быть положительными", model = model)
             return "error"
         }

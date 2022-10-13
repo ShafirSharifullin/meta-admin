@@ -110,6 +110,18 @@ body {
     text-align: center;
 }
 
+.form-page-size {
+    margin-bottom: 5px;
+}
+
+.form-page-size input[name="size"] {
+    width: 50px;
+}
+
+.form-page-size input[name="page"] {
+    display: none;
+}
+
 .button-1 {
     color: #000000;
     border-radius: 5px;
@@ -136,6 +148,13 @@ body {
 .pagination a button {
     flex: 1 1 auto;
     margin: 0 5px;
+}
+
+.pagination p {
+    flex: 1 1 auto;
+    margin: 0 5px;
+    justify-content: flex-start;
+    font-weight: bold;
 }
 
 .edit-form .button-1 {
