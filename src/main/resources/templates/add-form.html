@@ -7,15 +7,14 @@
 </head>
 <body>
 <main>
-    <h1 class="header-h1">Форма редактирования</h1>
+    <h1 class="header-h1">Форма добавления</h1>
 
-    <form class="data-entry-form"
-          th:action="@{'/admin/{repoCode}/{id}' (repoCode = ${repoCode}, id = ${repoItem.hashCode})}"
-          th:method="put" th:object="${repoItem}">
+    <form class="data-entry-form" th:action="@{'/admin/{repoCode}' (repoCode = ${repoCode})}"
+          th:method="post">
         <th:block th:each="fieldName: ${fieldNames}">
             <div>
                 <label class="name-field" th:for="${fieldName}"><span th:text="${fieldName}"></span></label>
-                <input th:field="*{__${fieldName}__}" th:id="${fieldName}" th:name="strings" type="text">
+                <input th:id="${fieldName}" th:name="strings" type="text">
             </div>
         </th:block>
         <button class="button-1" type="submit">Сохранить</button>

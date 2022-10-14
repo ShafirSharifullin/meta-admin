@@ -110,8 +110,15 @@ body {
     text-align: center;
 }
 
-.form-page-size {
+.div-1 {
+    display: flex;
     margin-bottom: 5px;
+}
+
+.div-1 a {
+    flex: 1 1 auto;
+    margin: 0 5px;
+    justify-content: flex-end;
 }
 
 .form-page-size input[name="size"] {
@@ -157,18 +164,18 @@ body {
     font-weight: bold;
 }
 
-.edit-form .button-1 {
+.data-entry-form .button-1 {
     margin: 20px;
     font-size: 12px;
 }
 
-.edit-form input {
+.data-entry-form input {
     padding: 10px;
     margin: 10px 0;
     border-radius: 10px;
 }
 
-.edit-form div {
+.data-entry-form div {
     margin: 20px;
     font-size: 12px;
 }

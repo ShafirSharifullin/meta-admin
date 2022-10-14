@@ -9,13 +9,19 @@
 <main>
     <h1 class="header-h1">Данные из репозитория <span th:text="${repoCode}"></span></h1>
 
-    <form class="form-page-size" th:action="@{'/admin/{repoCode}'(repoCode = ${repoCode})}" th:method="get">
-        <label>Количество элементов на странице:
-            <input th:name="size" th:value="${size}">
-        </label>
-        <input th:name="page" th:value="${page}">
-        <button class="button-1" type="submit">Обновить</button>
-    </form>
+    <div class="div-1">
+        <form class="form-page-size" th:action="@{'/admin/{repoCode}'(repoCode = ${repoCode})}" th:method="get">
+            <label>Количество элементов на странице:
+                <input th:name="size" th:value="${size}">
+            </label>
+            <input th:name="page" th:value="${page}">
+            <button class="button-1" type="submit">Обновить</button>
+        </form>
+
+        <a th:href="@{/admin/{repoCode}/add(repoCode = ${repoCode}, size=${size}, page=${page})}">
+            <button class="button-1">Добавить элемент</button>
+        </a>
+    </div>
 
     <table class="table-1">
         <thead>
@@ -30,7 +36,7 @@
             <td th:each="fieldName: ${fieldNames}" th:text="${repoItem.__${fieldName}__}"></td>
             <td style="text-align:center;" th:if="${totalPages > 0}">
                 <form class="action"
-                      th:action="@{'/admin/{repoCode}/{id}'(id=${repoItem.hashCode}, repoCode = ${repoCode}, page=)}"
+                      th:action="@{'/admin/{repoCode}/{id}'(id=${repoItem.hashCode}, repoCode = ${repoCode})}"
                       th:method="get">
                     <input th:name="page" th:value="${page}">
                     <input th:name="size" th:value="${size}">

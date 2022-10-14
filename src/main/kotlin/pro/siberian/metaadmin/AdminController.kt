@@ -51,6 +51,29 @@ class AdminController(private val metaAdminService: MetaAdminService) {
         return "list-repo-items"
     }
 
+    @GetMapping("/admin/{repoCode}/add")
+    fun showAddForm(
+        @PathVariable repoCode: String,
+        @RequestParam("page") page: Int,
+        @RequestParam("size") size: Int,
+        model: Model,
+    ): String {
+        if (page < 0 || size < 0) {
+            error(HttpStatus.BAD_REQUEST, "Параметры page и size должны быть положительными", model = model)
+            return "error"
+        }
+
+        model.addAttribute("fieldNames", metaAdminService.getNamesDomainFields(repoCode))
+
+        return "add-form"
+    }
+
+    @PostMapping("/admin/{repoCode}")
+    fun addItem(@PathVariable repoCode: String, vararg strings: String): String {
+//        TODO Сохранения нового элемента
+        return "redirect:/admin/$repoCode"
+    }
+
     @GetMapping("/admin/{repoCode}/{id}")
     fun showEditForm(
         @PathVariable id: Int,
@@ -77,8 +100,9 @@ class AdminController(private val metaAdminService: MetaAdminService) {
         return "edit-form"
     }
 
-    @PostMapping("/admin/{repoCode}/{id}")
-    fun updateItem(@PathVariable id: Int, @PathVariable repoCode: String, vararg strings: String): String {
+    @PutMapping("/admin/{repoCode}/{id}")
+    fun updateItem(@PathVariable id: Int, @PathVariable repoCode: String, repoItem: Any): String {
+//        TODO Сохранения изменений по элементу
         return "redirect:/admin/$repoCode"
     }
 
